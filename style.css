@@ -1,0 +1,31 @@
+header {
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+main {
+  margin: 0 auto;
+  background-color: green;
+  width: 80%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-row {
+  display: flex;
+  justify-content: center;
+  width: 40%;
+  height: 30%;
+}
+
+.card-container {
+  border: 1px solid black;
+  width: 50%;
+}
+
+/* .action {
+  display: inline-block;
+} */
