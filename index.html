@@ -10,19 +10,30 @@
     <title>Baccarat Game</title>
   </head>
   <body>
-    <header>Click on start game to begin!</header>
+    <header>Play Baccarat!</header>
     <main id="container">
       <h1>House</h1>
-      <div class="card-row">
-        <div class="card-container" id="house-card1"></div>
-        <div class="card-container" id="house-card1"></div>
+      <div class="card-row" id="house-row">
+        <div class="card-container"><img id="house-card1" /></div>
+        <div class="card-container"><img id="house-card2" /></div>
       </div>
       <button id="hit" class="action">Hit</button>
       <button id="stand" class="action">Stand</button>
       <h1>Player</h1>
-      <div class="card-row">
-        <div class="card-container" id="player-card1"></div>
-        <div class="card-container" id="player-card2"></div>
+      <div class="card-row" id="player-row">
+        <div class="card-container"><img id="player-card1" /></div>
+        <div class="card-container"><img id="player-card2" /></div>
+        <dialog>
+          <h1 id="primary-text">Welcome to the Baccarat Game!</h1>
+          <p id="secondary-text">
+            More details on the rules can be found
+            <a
+              href="https://www.caesars.com/casino-gaming-blog/latest-posts/table-games/baccarat/how-to-play-baccarat"
+              >here</a
+            >
+          </p>
+          <button id="dialog">Start Game</button>
+        </dialog>
       </div>
     </main>
   </body>
