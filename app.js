@@ -11,51 +11,39 @@ const playerCardImg1 = document.querySelector("#player-card1");
 const playerCardImg2 = document.querySelector("#player-card2");
 const playerRow = document.querySelector("#player-row");
 
-const houseCardInfo = [
-  {
-    // house card 1
-  },
-  {
-    // house card 2
-  },
-];
-
-const playerCardInfo = [
-  {
-    // player card 1
-  },
-  {
-    // player card 2
-  },
-];
-
-const displayText = [
-  {
-    primary: "Welcome to the Baccarat Game!",
-    secondary:
-      " More details on the rules can be found <a href='https://www.caesars.com/casino-gaming-blog/latest-posts/table-games/baccarat/how-to-play-baccarat'>here</a>",
-    btn: "Start Game",
-  },
-  {
-    primary: "Player won",
-    secondary: `The house has a score of ${houseValue} and the player has a score of ${playerValue}`,
-    btn: "Play Again",
-  },
-  {
-    primary: "Player lost",
-    secondary: `The house has a score of ${houseValue} and the player has a score of ${playerValue}`,
-    btn: "Play Again",
-  },
-  {
-    primary: "Tie",
-    secondary: `The house has a score of ${houseValue} and the player has a score of ${playerValue}`,
-    btn: "Play Again",
-  },
-];
-
 let deck_id;
-let houseValue;
-let playerValue;
+let houseValue = 0;
+let playerValue = 0;
+
+let houseCardInfo = [];
+let playerCardInfo = [];
+
+const updateDisplayText = (house, player) => {
+  return [
+    {
+      primary: "Welcome to the Baccarat Game!",
+      secondary:
+        " More details on the rules can be found <a href='https://www.caesars.com/casino-gaming-blog/latest-posts/table-games/baccarat/how-to-play-baccarat'>here</a>",
+      btn: "Start Game",
+    },
+    {
+      primary: "Player won",
+      secondary: `The house has a score of ${house} and the player has a score of ${player}`,
+      btn: "Play Again",
+    },
+    {
+      primary: "Player lost",
+      secondary: `The house has a score of ${house} and the player has a score of ${player}`,
+      btn: "Play Again",
+    },
+    {
+      primary: "Tie",
+      secondary: `The house has a score of ${house} and the player has a score of ${player}`,
+      btn: "Play Again",
+    },
+  ];
+};
+
 dialog.showModal();
 
 const createDeckAndDrawCard = async () => {
@@ -63,68 +51,192 @@ const createDeckAndDrawCard = async () => {
     "https://deckofcardsapi.com/api/deck/new/draw/?count=4"
   );
   deck_id = result.data.deck_id;
-  cardInfo[0] = result.data.cards[0];
-  cardInfo[1] = result.data.cards[1];
-  cardInfo[2] = result.data.cards[2];
-  cardInfo[3] = result.data.cards[3];
+  houseCardInfo = [
+    ...houseCardInfo,
+    result.data.cards[0],
+    result.data.cards[1],
+  ];
+  playerCardInfo = [
+    ...playerCardInfo,
+    result.data.cards[2],
+    result.data.cards[3],
+  ];
   houseCardImg1.setAttribute("src", result.data.cards[0].image);
   houseCardImg2.setAttribute("src", result.data.cards[1].image);
   playerCardImg1.setAttribute("src", result.data.cards[2].image);
   playerCardImg2.setAttribute("src", result.data.cards[3].image);
+
+  for (const card of houseCardInfo) {
+    if (parseInt(card.value)) {
+      houseValue += parseInt(card.value);
+    } else if (card.value === "ACE") {
+      houseValue += 1;
+    }
+  }
+  houseValue = houseValue % 10;
+
+  for (const card of playerCardInfo) {
+    if (parseInt(card.value)) {
+      playerValue += parseInt(card.value);
+    } else if (card.value === "ACE") {
+      playerValue += 1;
+    }
+  }
+  playerValue = playerValue % 10;
+
+  console.log(playerValue, houseValue);
 };
 
-const activateEndOfGame = (result) => {
-  if (result === "player") {
-    primaryText.textContent = displayText[1].primary;
-    secondaryText.textContent = displayText[1].secondary;
-    dialogBtn.textContent = displayText[1].btn;
-  } else if (result === "house") {
-    primaryText.textContent = displayText[2].primary;
-    secondaryText.textContent = displayText[2].secondary;
-    dialogBtn.textContent = displayText[2].btn;
-  } else {
-    primaryText.textContent = displayText[3].primary;
-    secondaryText.textContent = displayText[3].secondary;
-    dialogBtn.textContent = displayText[3].btn;
+const createNewCard = (role) => {
+  if (role === "player") {
+    const card = document.createElement("div");
+    card.classList.add("card-container");
+    card.classList.add("player-card-container");
+    return card;
+  } else if (role === "house") {
+    const card = document.createElement("div");
+    card.classList.add("card-container");
+    card.classList.add("house-card-container");
+    return card;
   }
 };
 
-/* const resetGame = () => {
-    primaryText.textContent = displayText[3].primary;
-    secondaryText.textContent = displayText[3].secondary;
-    dialogBtn.textContent = displayText[3].btn;
-} */
+const updateCardStyling = (role) => {
+  // change styling to fit 3 cards in a row
+  if (role === "player") {
+    playerRow.style.width = "70%";
+    const playerCards = document.querySelectorAll(".player-card-container");
+    for (const card of playerCards) {
+      card.style.width = "33%";
+    }
+  } else if (role === "house") {
+    houseRow.style.width = "70%";
+    const houseCards = document.querySelectorAll(".house-card-container");
+    for (const card of houseCards) {
+      card.style.width = "33%";
+    }
+  }
+};
+
+const endOfGame = (result) => {
+  if (result === "player") {
+    primaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[1].primary;
+    secondaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[1].secondary;
+    dialogBtn.textContent = updateDisplayText(houseValue, playerValue)[1].btn;
+  } else if (result === "house") {
+    primaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[2].primary;
+    secondaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[2].secondary;
+    dialogBtn.textContent = updateDisplayText(houseValue, playerValue)[2].btn;
+  } else {
+    primaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[3].primary;
+    secondaryText.textContent = updateDisplayText(
+      houseValue,
+      playerValue
+    )[3].secondary;
+    dialogBtn.textContent = updateDisplayText(houseValue, playerValue)[3].btn;
+  }
+  dialog.showModal();
+};
 
 const checkWinCondition = () => {
-  for (const card of houseCardInfo) {
-    houseValue += card.value;
-  }
-  for (const card of playerCardInfo) {
-    playerValue += card.value;
-  }
-
   if (houseValue > playerValue) {
     return "house";
   } else if (houseValue < playerValue) {
     return "player";
   } else return "tie";
 };
+
+const resetGame = () => {
+  houseValue = 0;
+  playerValue = 0;
+  houseCardInfo = [];
+  playerCardInfo = [];
+};
+
 dialogBtn.addEventListener("click", () => {
   // On button click, Start game (use modal)
   dialog.close();
-
+  resetGame();
   // Get deck of cards and deck id
   // Draw and give out cards for dealer and player (hide cards for house)
   createDeckAndDrawCard();
 });
 
-// Check for dealer / player win condition (8, 9 points)
+// Activate buttons for hit/stand
+hitBtn.addEventListener("click", async () => {
+  // store new card data in array
+  const result = await axios.get(
+    `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
+  );
+  playerCardInfo.push(result.data.cards[0]);
 
-// Else activate buttons for hit/stand
+  // update player value
+  if (parseInt(result.data.cards[0].value)) {
+    playerValue += parseInt(result.data.cards[0].value);
+  } else if (result.data.cards[0].value === "ACE") {
+    playerValue += 1;
+  }
+  playerValue = playerValue % 10;
+  // create and display new card
+  const newPlayerCard = createNewCard("player");
+  const newPlayerCardImg = document.createElement("img");
+  newPlayerCardImg.setAttribute("src", result.data.cards[0].image);
+  newPlayerCard.append(newPlayerCardImg);
+  playerRow.append(newPlayerCard);
 
-// Deactivate buttons after click (there is only drawing of one card in baccarat)
-// if draw display new card and recenter row
+  updateCardStyling("player");
 
-// Implement simple house logic about whether to draw
+  // House to draw a card if value less than player value
+  if (playerValue > houseValue) {
+    const input = await axios.get(
+      `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
+    );
+    houseCardInfo.push(input.data.cards[0]);
+
+    // update house value
+    if (parseInt(result.data.cards[0].value)) {
+      houseValue += parseInt(result.data.cards[0].value);
+    } else if (result.data.cards[0].value === "ACE") {
+      houseValue += 1;
+    }
+    houseValue = houseValue % 10;
+
+    // can write updatevalue function to replace 4 instances above
+
+    // create and display new card
+    const newhouseCard = createNewCard("house");
+    const newhouseCardImg = document.createElement("img");
+    newhouseCardImg.setAttribute("src", input.data.cards[0].image);
+    newhouseCard.append(newhouseCardImg);
+    houseRow.append(newhouseCard);
+
+    updateCardStyling("house");
+  }
+
+  const winner = checkWinCondition();
+  endOfGame(winner);
+
+  // Deactivate buttons after click (there is only drawing of one card in baccarat)
+  hitBtn.removeEventListener("click", () => {
+    console.log("Hit Button deactivated");
+  });
+});
+
+standBtn.addEventListener("click", () => {});
 
 // Display winner based on results, keep track of score (use modal)

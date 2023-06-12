@@ -18,6 +18,11 @@ main {
   align-items: center;
 }
 
+#buttons {
+  display: inline-block;
+  margin-top: 10px;
+}
+
 .card-row {
   display: flex;
   justify-content: center;
