@@ -1,2 +1,12 @@
 # GA_Project-1
-Remake of Flappy Bird using HTML, CSS, JS
+
+Full simulation of casino style baccarat with one player and one house dealer.
+
+More details on the rules of the game can be found here:
+https://www.caesars.com/casino-gaming-blog/latest-posts/table-games/baccarat/how-to-play-baccarat
+
+Technologies used:
+
+- Javascript
+- HTML
+- CSS
