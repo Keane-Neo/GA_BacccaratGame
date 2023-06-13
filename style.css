@@ -2,12 +2,6 @@
   margin: 0 auto;
 }
 
-header {
-  width: 80%;
-  margin: 0 auto;
-  text-align: center;
-}
-
 main {
   margin: 0 auto;
   background-color: green;
@@ -33,6 +27,14 @@ main {
 .card-container {
   border: 1px solid black;
   width: 50%;
+}
+
+.updated-row-style {
+  width: 70%;
+}
+
+.updated-card-style {
+  width: 33%;
 }
 
 img {

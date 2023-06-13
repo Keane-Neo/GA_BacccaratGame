@@ -83,8 +83,6 @@ const createDeckAndDrawCard = async () => {
     }
   }
   playerValue = playerValue % 10;
-
-  console.log(playerValue, houseValue);
 };
 
 const createNewCard = (role) => {
@@ -104,17 +102,46 @@ const createNewCard = (role) => {
 const updateCardStyling = (role) => {
   // change styling to fit 3 cards in a row
   if (role === "player") {
-    playerRow.style.width = "70%";
+    playerRow.classList.add("updated-row-style");
     const playerCards = document.querySelectorAll(".player-card-container");
     for (const card of playerCards) {
-      card.style.width = "33%";
+      card.classList.add("updated-card-style");
     }
   } else if (role === "house") {
-    houseRow.style.width = "70%";
+    houseRow.classList.add("updated-row-style");
     const houseCards = document.querySelectorAll(".house-card-container");
     for (const card of houseCards) {
-      card.style.width = "33%";
+      card.classList.add("updated-card-style");
     }
+  }
+};
+
+const removeCardStyling = () => {
+  // Change back styling to original
+  playerRow.classList.remove("updated-row-style");
+  houseRow.classList.remove("updated-row-style");
+  const houseCards = document.querySelectorAll(".house-card-container");
+  for (const card of houseCards) {
+    card.classList.remove("updated-card-style");
+  }
+  const playerCards = document.querySelectorAll(".player-card-container");
+  for (const card of playerCards) {
+    card.classList.remove("updated-card-style");
+  }
+
+  // Remove any extra card containers
+  if (playerRow.childElementCount > 2) {
+    playerRow.removeChild(playerRow.lastChild);
+  }
+
+  if (houseRow.childElementCount > 2) {
+    houseRow.removeChild(houseRow.lastChild);
+  }
+
+  // Remove all images
+  const images = document.querySelectorAll("img");
+  for (const image of images) {
+    image.removeAttribute("src");
   }
 };
 
@@ -172,6 +199,7 @@ dialogBtn.addEventListener("click", () => {
   // On button click, Start game (use modal)
   dialog.close();
   resetGame();
+  removeCardStyling();
   // Get deck of cards and deck id
   // Draw and give out cards for dealer and player (hide cards for house)
   createDeckAndDrawCard();
@@ -202,16 +230,16 @@ hitBtn.addEventListener("click", async () => {
   updateCardStyling("player");
 
   // House to draw a card if value less than player value
-  if (playerValue > houseValue) {
+  if (playerValue > houseValue && houseValue < 5) {
     const input = await axios.get(
       `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
     );
     houseCardInfo.push(input.data.cards[0]);
 
     // update house value
-    if (parseInt(result.data.cards[0].value)) {
-      houseValue += parseInt(result.data.cards[0].value);
-    } else if (result.data.cards[0].value === "ACE") {
+    if (parseInt(input.data.cards[0].value)) {
+      houseValue += parseInt(input.data.cards[0].value);
+    } else if (input.data.cards[0].value === "ACE") {
       houseValue += 1;
     }
     houseValue = houseValue % 10;
@@ -228,15 +256,39 @@ hitBtn.addEventListener("click", async () => {
     updateCardStyling("house");
   }
 
+  // Display winner based on results, keep track of score (use modal)
   const winner = checkWinCondition();
   endOfGame(winner);
-
-  // Deactivate buttons after click (there is only drawing of one card in baccarat)
-  hitBtn.removeEventListener("click", () => {
-    console.log("Hit Button deactivated");
-  });
 });
 
-standBtn.addEventListener("click", () => {});
+standBtn.addEventListener("click", async () => {
+  // House to draw a card if value less than player value
+  if (playerValue > houseValue && houseValue < 5) {
+    const input = await axios.get(
+      `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
+    );
+    houseCardInfo.push(input.data.cards[0]);
 
-// Display winner based on results, keep track of score (use modal)
+    // update house value
+    if (parseInt(input.data.cards[0].value)) {
+      houseValue += parseInt(input.data.cards[0].value);
+    } else if (input.data.cards[0].value === "ACE") {
+      houseValue += 1;
+    }
+    houseValue = houseValue % 10;
+
+    // can write updatevalue function to replace 4 instances above
+
+    // create and display new card
+    const newhouseCard = createNewCard("house");
+    const newhouseCardImg = document.createElement("img");
+    newhouseCardImg.setAttribute("src", input.data.cards[0].image);
+    newhouseCard.append(newhouseCardImg);
+    houseRow.append(newhouseCard);
+
+    updateCardStyling("house");
+  }
+  // Display winner based on results, keep track of score (use modal)
+  const winner = checkWinCondition();
+  endOfGame(winner);
+});
