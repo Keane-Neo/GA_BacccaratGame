@@ -1,12 +1,3 @@
-import {
-  checkWinCondition,
-  createDeckAndDrawCard,
-  resetGame,
-  updateCardInfo,
-  updateValue,
-} from "./gameFunctions";
-import { removeCardStyling } from "./userInterface";
-
 const dialogBtn = document.querySelector("#dialog");
 const hitBtn = document.querySelector("#hit");
 const standBtn = document.querySelector("#stand");
@@ -21,18 +12,20 @@ let playerCardInfo = [];
 
 dialog.showModal();
 
-dialogBtn.addEventListener("click", () => {
+dialogBtn.addEventListener("click", async () => {
   // On button click, Start game (use modal)
   dialog.close();
-  resetGame();
+  houseValue = 0;
+  playerValue = 0;
+  houseCardInfo = [];
+  playerCardInfo = [];
   removeCardStyling();
   // Get deck of cards and deck id
 
-  const result = createDeckAndDrawCard();
+  const result = await createDeckAndDrawCard();
   deck_id = result.data.deck_id;
-
-  houseCardInfo = updateCardInfo(houseCardInfo, result);
-  playerCardInfo = updateCardInfo(playerCardInfo, result);
+  houseCardInfo = updateCardInfo("house", houseCardInfo, result);
+  playerCardInfo = updateCardInfo("player", playerCardInfo, result);
 
   houseValue = updateValue(houseCardInfo);
   playerValue = updateValue(playerCardInfo);
@@ -54,10 +47,10 @@ hitBtn.addEventListener("click", async () => {
 
   // House to draw a card if value less than player value
   if (playerValue > houseValue && houseValue < 5) {
-    const input = await axios.get(
+    const result = await axios.get(
       `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
     );
-    houseCardInfo.push(input.data.cards[0]);
+    houseCardInfo.push(result.data.cards[0]);
 
     // update house value
     houseValue = updateValue(houseCardInfo);
@@ -67,16 +60,16 @@ hitBtn.addEventListener("click", async () => {
   }
 
   // Display winner based on results, keep track of score (use modal)
-  checkWinCondition();
+  checkWinCondition(houseValue, playerValue);
 });
 
 standBtn.addEventListener("click", async () => {
   // House to draw a card if value less than player value
   if (playerValue > houseValue && houseValue < 5) {
-    const input = await axios.get(
+    const result = await axios.get(
       `https://deckofcardsapi.com/api/deck/${deck_id}/draw/?count=1`
     );
-    houseCardInfo.push(input.data.cards[0]);
+    houseCardInfo.push(result.data.cards[0]);
 
     // update house value
     houseValue = updateValue(houseCardInfo);
@@ -85,5 +78,5 @@ standBtn.addEventListener("click", async () => {
     createAndDisplayCard("house", result);
   }
   // Display winner based on results, keep track of score (use modal)
-  checkWinCondition();
+  checkWinCondition(houseValue, playerValue);
 });

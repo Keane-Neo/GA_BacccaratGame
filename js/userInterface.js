@@ -1,7 +1,7 @@
 const playerRow = document.querySelector("#player-row");
 const houseRow = document.querySelector("#house-row");
 
-export const updateCardStyling = (role) => {
+const updateCardStyling = (role) => {
   // change styling to fit 3 cards in a row
   if (role === "player") {
     playerRow.classList.add("updated-row-style");
@@ -18,7 +18,7 @@ export const updateCardStyling = (role) => {
   }
 };
 
-export const removeCardStyling = () => {
+const removeCardStyling = () => {
   // Change back styling to original
   playerRow.classList.remove("updated-row-style");
   houseRow.classList.remove("updated-row-style");
@@ -47,7 +47,7 @@ export const removeCardStyling = () => {
   }
 };
 
-export const createAndDisplayCard = (role, result) => {
+const createAndDisplayCard = (role, result) => {
   const card = document.createElement("div");
   card.classList.add("card-container");
   const cardImg = document.createElement("img");

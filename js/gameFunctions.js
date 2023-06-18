@@ -1,12 +1,12 @@
 const primaryText = document.querySelector("#primary-text");
 const secondaryText = document.querySelector("#secondary-text");
-
 const houseCardImg1 = document.querySelector("#house-card1");
 const houseCardImg2 = document.querySelector("#house-card2");
 const playerCardImg1 = document.querySelector("#player-card1");
 const playerCardImg2 = document.querySelector("#player-card2");
+const sidebar = document.querySelector("aside");
 
-export const updateDisplayText = (house, player) => {
+const updateDisplayText = (house, player) => {
   return [
     {
       primary: "Welcome to the Baccarat Game!",
@@ -32,7 +32,7 @@ export const updateDisplayText = (house, player) => {
   ];
 };
 
-export const createDeckAndDrawCard = async () => {
+const createDeckAndDrawCard = async () => {
   const result = await axios.get(
     "https://deckofcardsapi.com/api/deck/new/draw/?count=4"
   );
@@ -45,16 +45,17 @@ export const createDeckAndDrawCard = async () => {
   return result;
 };
 
-export const updateCardInfo = (cardInfo, result) => {
-  if (cardInfo === "houseCardInfo") {
+const updateCardInfo = (role, cardInfo, result) => {
+  if (role === "house") {
     cardInfo = [...cardInfo, result.data.cards[0], result.data.cards[1]];
-  } else if (cardInfo === "playerCardInfo") {
+  } else if (role === "player") {
     cardInfo = [...cardInfo, result.data.cards[2], result.data.cards[3]];
   }
+
   return cardInfo;
 };
 
-export const updateValue = (cardInfo) => {
+const updateValue = (cardInfo) => {
   let value = 0;
   for (const card of cardInfo) {
     if (parseInt(card.value)) {
@@ -68,7 +69,7 @@ export const updateValue = (cardInfo) => {
   return value;
 };
 
-export const endOfGame = (result) => {
+const endOfGame = (result) => {
   if (result === "player") {
     primaryText.textContent = updateDisplayText(
       houseValue,
@@ -103,17 +104,21 @@ export const endOfGame = (result) => {
   dialog.showModal();
 };
 
-export const checkWinCondition = () => {
+const checkWinCondition = (houseValue, playerValue) => {
   if (houseValue > playerValue) {
+    const h2 = document.createElement("h2");
+    h2.textContent = `House ${houseValue}-${playerValue}`;
+    sidebar.append(h2);
     endOfGame("house");
   } else if (houseValue < playerValue) {
+    const h2 = document.createElement("h2");
+    h2.textContent = `Player ${playerValue}-${houseValue}`;
+    sidebar.append(h2);
     endOfGame("player");
-  } else return "tie";
-};
-
-export const resetGame = () => {
-  houseValue = 0;
-  playerValue = 0;
-  houseCardInfo = [];
-  playerCardInfo = [];
+  } else {
+    const h2 = document.createElement("h2");
+    h2.textContent = `Tie`;
+    sidebar.append(h2);
+    endOfGame("player");
+  }
 };

@@ -5,35 +5,48 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rye&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="js/app.js" type="module"></script>
+    <script src="js/gameFunctions.js" defer></script>
+    <script src="js/userInterface.js" defer></script>
+    <script src="js/app.js" defer></script>
     <title>Baccarat Game</title>
   </head>
   <body>
-    <main id="container">
-      <h1>Baccarat Game</h1>
-      <h2>House</h2>
-      <div class="card-row" id="house-row">
-        <div class="card-container house-card-container">
-          <img id="house-card1" />
+    <main>
+      <div id="game">
+        <h1>Baccarat Game</h1>
+        <h2 id="house-label">House</h2>
+        <div class="card-row" id="house-row">
+          <div class="card-container house-card-container">
+            <img id="house-card1" />
+          </div>
+          <div class="card-container house-card-container">
+            <img id="house-card2" />
+          </div>
         </div>
-        <div class="card-container house-card-container">
-          <img id="house-card2" />
+        <div id="buttons">
+          <button id="hit" class="action">Hit</button>
+          <button id="stand" class="action">Stand</button>
+        </div>
+        <h2 id="player-label">Player</h2>
+        <div class="card-row" id="player-row">
+          <div class="card-container player-card-container">
+            <img id="player-card1" />
+          </div>
+          <div class="card-container player-card-container">
+            <img id="player-card2" />
+          </div>
         </div>
       </div>
-      <div id="buttons">
-        <button id="hit" class="action">Hit</button>
-        <button id="stand" class="action">Stand</button>
-      </div>
-      <h2>Player</h2>
-      <div class="card-row" id="player-row">
-        <div class="card-container player-card-container">
-          <img id="player-card1" />
-        </div>
-        <div class="card-container player-card-container">
-          <img id="player-card2" />
-        </div>
-      </div>
+      <aside id="sidebar">
+        <h1>Game Results History</h1>
+      </aside>
       <dialog>
         <h1 id="primary-text">Welcome to the Baccarat Game!</h1>
         <p id="secondary-text">
