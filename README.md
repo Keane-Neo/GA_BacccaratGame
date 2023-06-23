@@ -1,5 +1,7 @@
 # GA_Project-1
 
+Live Project Link: https://keane-neo.github.io/GA_BacccaratGame/
+
 Full simulation of casino style baccarat with one player and one house dealer.
 
 More details on the rules of the game can be found here:
