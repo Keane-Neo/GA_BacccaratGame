@@ -2,6 +2,11 @@
   margin: 0 auto;
 }
 
+h1 {
+  margin-top: 1px;
+  margin-bottom: 0;
+}
+
 body {
   overflow: hidden;
 }
@@ -58,7 +63,7 @@ main {
   display: flex;
   justify-content: center;
   width: 50%;
-  height: 30%;
+  height: 33%;
 }
 
 .card-container {
@@ -80,10 +85,18 @@ img {
   object-fit: scale-down;
 }
 
-/* ::-webkit-scrollbar {
-  width: 10px;
-  background-color: black;
-} */
+.action {
+  border: 3px solid black;
+  font-size: large;
+  background-color: transparent;
+  color: black;
+  font-weight: 900;
+  font-family: "Rye", cursive;
+}
+
+button:hover {
+  cursor: pointer;
+}
 
 #sidebar::-webkit-scrollbar {
   width: 5px;
