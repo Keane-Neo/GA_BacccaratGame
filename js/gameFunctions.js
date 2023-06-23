@@ -108,11 +108,13 @@ const checkWinCondition = (houseValue, playerValue) => {
   if (houseValue > playerValue) {
     const h2 = document.createElement("h2");
     h2.textContent = `House ${houseValue}-${playerValue}`;
+    h2.classList.add("house-label");
     sidebar.append(h2);
     endOfGame("house");
   } else if (houseValue < playerValue) {
     const h2 = document.createElement("h2");
     h2.textContent = `Player ${playerValue}-${houseValue}`;
+    h2.classList.add("player-label");
     sidebar.append(h2);
     endOfGame("player");
   } else {

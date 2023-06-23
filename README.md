@@ -10,3 +10,4 @@ Technologies used:
 - Javascript
 - HTML
 - CSS
+- Free poker card API (https://deckofcardsapi.com/)
