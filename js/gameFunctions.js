@@ -121,6 +121,6 @@ const checkWinCondition = (houseValue, playerValue) => {
     const h2 = document.createElement("h2");
     h2.textContent = `Tie`;
     sidebar.append(h2);
-    endOfGame("player");
+    endOfGame("Tie");
   }
 };
